@@ -4,10 +4,10 @@ public var userGUI: GameObject;
 public var openThingWindow : boolean = false;
 
 public var tempName: String="";
-public var myName: String="c";
+public var myName: String="bar";
 public var thingID: int;
 
-public var thingWindow: Rect = Rect(10,10,300,300);
+public var thingWindow: Rect = Rect(10,10,300,100);
 
 private var can_drag: boolean = false;
 private var no_click : boolean = false;
@@ -31,6 +31,7 @@ function OnMouseDown() {
 		second_click = Time.time;	
 		if((second_click - first_click)<delay){
 				Debug.Log("Double click on "+myName+"! "+openThingWindow);
+				Debug.Log("sdfasdklfjas click on "+name+"! "+openThingWindow);
 				openThingWindow = true;
 				no_click = false;
 		}
@@ -56,6 +57,7 @@ function EditThing(windowID: int){
 	
 	if (GUI.Button (Rect (thingWindow.width-160,thingWindow.height-40,70,30),"OK")){
 			myName = tempName;
+			name = myName;
 			openThingWindow = false;
 		}
 

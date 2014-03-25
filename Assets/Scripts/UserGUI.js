@@ -36,10 +36,31 @@ static var curr_environment: GameObject;
 static var disp_det: String="";
 
 static var obj_array = new Array();
+var scrollPosition : Vector2 = Vector2.zero;
+var heightscroll = 0;
+
 function OnGUI () {
+
+
+	// An absolute-positioned example: We make a scrollview that has a really large client
+		// rect and put it in a small rect on the screen.
+		
+		//Rect(Screen.width*4/5,top,Screen.width/6,30),
+		
+		//scrollPosition = GUI.BeginScrollView (Rect (10,300,100,100), scrollPosition, Rect (0, 0, 220, 200));
+		
+		// Make four buttons - one in each corner. The coordinate system is defined
+		// by the last parameter to BeginScrollView.
+		GUI.Button (Rect (0,0,100,20), "Top-left");
+		GUI.Button (Rect (120,0,100,20), "Top-right");
+		GUI.Button (Rect (0,180,100,20), "Bottom-left");
+		GUI.Button (Rect (120,180,100,20), "Bottom-right");
+		
+		// End the scroll view that we began above.
+		//GUI.EndScrollView ();
 	
 	//GUI.Box(Rect(Screen.width*4/5-10, 10,Screen.width/5,Screen.height-50),"Roster");
-	if(GUI.Button(Rect(Screen.width*4/5,top_margin,Screen.width/6,30),"+")){
+	if(GUI.Button(Rect(Screen.width*4/5,30,Screen.width/6,30),"+")){
 		openWindow = true;
 	}
 	if(openWindow){
@@ -48,7 +69,9 @@ function OnGUI () {
 	//GUI.Box(Rect(Screen.width/6, Screen.height*5/6-10,Screen.width*3/5,Screen.height/6-10),"");
 	
 	//edit out ko muna
-	/*var top = 30;
+	var top = 0;
+	//(position: Rect, scrollPosition: Vector2, viewRect: Rect, alwaysShowHorizontal: bool, alwaysShowVertical: bool): Vector2;
+	scrollPosition = GUI.BeginScrollView (Rect (Screen.width*4/5,70,(Screen.width/6)+20,200), scrollPosition, Rect (Screen.width*4/5, 0, Screen.width/6, heightscroll));
 	//for(var i=0, top = 30; i<obj_count; i++, top+=30) {
 	 for(var i : int = 0; i < obj_count; i++){
 	 	//check if obj is character or not..
@@ -56,12 +79,14 @@ function OnGUI () {
 	 	object = obj_array[i];
 	 	var te = object.transform.gameObject.name;
 	 	//newAddedGO.name == string.Format("{0}(Clone)", myNeedPrefab.name
-	 	
+	 	if(GUI.Button(Rect(Screen.width*4/5,top,Screen.width/6,30), te)) {
+		 		editWindow = true;
+		 }
 	 	
 	 	//Debug.Log(te);
 	 	//Debug.Log("(Clone)Thing");
 	 	
-	 	if (te == "Thing(Clone)") {
+	 	/*if (te == "Thing(Clone)") {
 	 		if(GUI.Button(Rect(Screen.width*4/5,top,Screen.width/6,30), thing.GetComponent(ThingScript).myName)) {
 		 		editWindow = true;
 		 	}
@@ -69,11 +94,13 @@ function OnGUI () {
 		 	if(GUI.Button(Rect(Screen.width*4/5,top,Screen.width/6,30), character.GetComponent(CharacterScript).myName)) {
 		 		editWindow = true;
 		 	}
-	 	}
+	 	}*/
 	 	
 	 	
 	 	top = top + 40;
-	}*/
+	 	heightscroll = top;
+	}
+	GUI.EndScrollView ();
 	
 	if(curr_scene>1){
 		if(GUI.Button(Rect(Screen.width/6+100,Screen.height*5/6,50,Screen.height/6-30),"<<")){
@@ -92,6 +119,7 @@ function OnGUI () {
 			curr_environment.GetComponent(EnviScript).enabled = true;
 			disp_det = curr_environment.GetComponent(EnviScript).place;
 			Debug.Log("We are at "+disp_det);
+			Debug.Log("Current Scene is "+curr_scene);
 		}
 	}
 	if(curr_scene<scene_count){
@@ -110,6 +138,7 @@ function OnGUI () {
 			curr_environment.GetComponent(EnviScript).enabled = true;
 			disp_det = curr_environment.GetComponent(EnviScript).place;
 			Debug.Log("We are at "+disp_det);
+			Debug.Log("Current Scene is "+curr_scene);
 		}
 	}
 	if(GUI.Button(Rect(Screen.width/6+10,Screen.height*5/6,50,Screen.height/6-30),"+")){
@@ -135,6 +164,7 @@ function OnGUI () {
 			curr_environment.GetComponent(EnviScript).freshly_baked = true;
 			disp_det = curr_environment.GetComponent(EnviScript).place;
 			Debug.Log("We are at "+disp_det);
+			Debug.Log("Current Scene is "+curr_scene);
 	}
 	GUI.Label(Rect(20,20,150,30),disp_det);
 }
@@ -143,14 +173,16 @@ function AddEntity(windowID: int){
 		//top_margin = top_margin + 40;
 		if (GUI.Button (Rect (10,20,150,30), "Create Character")){
 		
+
 			var tempchar : GameObject;
 			tempchar = Instantiate(character,Vector3(x,y+1,z),Quaternion.identity);
 			tempchar.GetComponent(CharacterScript).characterID = char_count;
-			tempchar.name = "char"+char_count;
+			tempchar.name = ""+ curr_scene + ":char"+char_count;
 			char_count++;
-			//obj_array.Push(tempchar);
-			//obj_count++;
-			//top_margin = top_margin + 40;
+			
+			obj_array.Push(tempchar);
+			obj_count++;
+			top_margin = top_margin + 40;
 			openWindow = false;
 		}
 		if (GUI.Button (Rect (10,60,150,30), "Create Thing")){
@@ -158,11 +190,12 @@ function AddEntity(windowID: int){
 			var tempthing : GameObject;
 			tempthing = Instantiate(thing,Vector3(x,y+1,z),Quaternion.identity);
 			tempthing.GetComponent(ThingScript).thingID = thing_count;
-			tempthing.name = "thing"+thing_count;
+			tempthing.name = ""+ curr_scene + ":thing"+thing_count;
 			thing_count++;
-			//obj_array.Push(tempthing);
-			//obj_count++;
-			//top_margin = top_margin + 40;
+			
+			obj_array.Push(tempthing);
+			obj_count++;
+			top_margin = top_margin + 40;
 			openWindow = false;
 		}
 		if (GUI.Button (Rect (rosterWindow.width-80,rosterWindow.height-40,70,30),"Cancel")){

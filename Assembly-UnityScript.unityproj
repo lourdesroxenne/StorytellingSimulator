@@ -48,9 +48,12 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraScript.js" />
      <Compile Include="Assets\Scripts\CharacterScript.js" />
+     <Compile Include="Assets\Scripts\EnviScript.js" />
      <Compile Include="Assets\Scripts\Introduction_Scripts\Create.js" />
      <Compile Include="Assets\Scripts\Introduction_Scripts\Exit.js" />
      <Compile Include="Assets\Scripts\Introduction_Scripts\Play.js" />
+     <Compile Include="Assets\Scripts\MotherScript.js" />
+     <Compile Include="Assets\Scripts\NewBehaviourScript.js" />
      <Compile Include="Assets\Scripts\ThingScript.js" />
      <Compile Include="Assets\Scripts\UserGUI.js" />
   </ItemGroup>
